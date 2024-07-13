@@ -19,6 +19,8 @@ return new class extends Migration
             $table->dateTime('arrival_time');
             $table->decimal('price', 8, 2);
             $table->unsignedBigInteger('jasa_id');
+            $table->unsignedBigInteger('transport_id');
+            $table->unsignedBigInteger('facilitias_id');
             $table->timestamps();
         });
     }

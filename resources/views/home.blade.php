@@ -160,7 +160,10 @@
                     <form action="{{ route('routes.search') }}" method="POST">
                         @csrf
                         <div class="row g-2">
-                            <div class="col-md-3">
+                            <div class="col-md-2">
+                                <input type="date" class="form-select" name="departure_time" id="departure_time">
+                            </div>
+                            <div class="col-md-2">
                                 <select class="form-select" name="origin">
                                     <option selected>Pelabuhan Asal</option>
                                     @foreach ($routes as $route)
@@ -168,7 +171,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <select class="form-select" name="destination">
                                     <option selected>Pelabuhan Tujuan</option>
                                     @foreach ($routes as $route)
@@ -176,7 +179,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <select class="form-select" name="jenis_pengguna">
                                     <option selected>Jenis Pengguna</option>
                                     @foreach ($routes as $route)
@@ -185,10 +188,36 @@
                                 </select>
                             </div>
                             <div class="col-md-2">
+                                <select class="form-select" name="jenis_kapal">
+                                    <option selected>Jenis Kapal</option>
+                                    @foreach ($routes as $route)
+                                        @if ($route->transport)
+                                            <option value="{{ $route->transport->id }}">{{ $route->transport->name }}
+                                            </option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-2">
                                 <button type="submit" class="btn btn-primary w-100">Cari Tiket</button>
                             </div>
                         </div>
                     </form>
+
+                    {{-- @if ($routes->count() > 0)
+                        <div class="mt-3">
+                            <h3>Hasil Pencarian Tiket</h3>
+                            <ul>
+                                @foreach ($routes as $route)
+                                    <li>{{ $route->origin }} ke {{ $route->destination }} - {{ $route->departure_time }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @else
+                        <p>Tidak ada hasil pencarian yang cocok.</p>
+                    @endif --}}
+
+
                 </div>
             </div>
         </div>
@@ -215,7 +244,7 @@
                                 </div>
                                 <div class="p-4 mt-2">
                                     <div class="d-flex justify-content-between mb-3">
-                                        <h5 class="mb-0">Junior Suite</h5>
+                                        <h5 class="mb-0">{{ $b->transport->name }}</h5>
                                         <div class="ps-2">
                                             <small class="fa fa-star text-primary"></small>
                                             <small class="fa fa-star text-primary"></small>
@@ -225,16 +254,13 @@
                                         </div>
                                     </div>
                                     <div class="d-flex mb-3">
-                                        <small class="border-end me-3 pe-3"><i
-                                                class="fa fa-bed text-primary me-2"></i>3
-                                            Bed</small>
-                                        <small class="border-end me-3 pe-3"><i
-                                                class="fa fa-bath text-primary me-2"></i>2
-                                            Bath</small>
-                                        <small><i class="fa fa-wifi text-primary me-2"></i>Wifi</small>
+                                        @foreach ($fasilitas as $item)
+                                            <small class="border-end me-3 pe-3"><i
+                                                    class="fa fa-bed text-primary me-2"></i>{{ $item->name }}</small>
+                                        @endforeach
+
                                     </div>
-                                    <p class="text-body mb-3">Erat ipsum justo amet duo et elitr dolor, est duo duo eos
-                                        lorem sed diam stet diam sed stet lorem.</p>
+                                    <p class="text-body mb-3">{{ $b->fasilitas->description }}</p>
                                     <div class="d-flex justify-content-between">
                                         <a class="btn btn-sm btn-primary rounded py-2 px-4" href="">View
                                             Detail</a>

@@ -13,4 +13,9 @@ class Facilities extends Model
     {
         return $this->hasMany(Transportations::class);
     }
+
+    public function route()
+    {
+        return $this->hasMany(Routes::class);
+    }
 }

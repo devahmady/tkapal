@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('transportations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('capacity');
-            $table->unsignedBigInteger('facility_id');
-            $table->unsignedBigInteger('jasa_id');
+            $table->integer('capacity')->default(0);
+            $table->unsignedBigInteger('facility_id')->nullable();
+            $table->unsignedBigInteger('jasa_id')->default(1);
             $table->timestamps();
         });
     }

@@ -23,4 +23,9 @@ class Transportations extends Model
     {
         return $this->belongsTo(Jasa::class);
     }
+
+    public function route()
+    {
+        return $this->hasMany(Routes::class, 'transport_id');
+    }
 }

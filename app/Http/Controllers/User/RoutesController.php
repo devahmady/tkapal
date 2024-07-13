@@ -5,36 +5,45 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\Routes;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use App\Models\Facilities;
 
 class RoutesController extends Controller
 {
     public function search(Request $request)
     {
-        // Ambil data yang diperlukan dari request
-        $origin = $request->input('origin');
-        $destination = $request->input('destination');
-        $jenis_pengguna = $request->input('jenis_pengguna');
+        $query = Routes::with('jasa', 'transport','fasilitas');
 
-        // Query untuk mencari rute sesuai dengan kriteria
-        $routes = Routes::query();
 
-        if (!empty($origin)) {
-            $routes->where('origin', $origin);
+        if ($request->departure_time) {
+            // Konversi input tanggal ke objek Carbon dan ubah formatnya
+            $departureTime = Carbon::createFromFormat('Y-m-d', $request->departure_time)->format('Y-m-d');
+            $query->whereDate('departure_time', $departureTime);
         }
 
-        if (!empty($destination)) {
-            $routes->where('destination', $destination);
+        if ($request->origin) {
+            $query->where('origin', $request->origin);
         }
 
-        if (!empty($jenis_pengguna)) {
-            $routes->whereHas('jasa', function ($query) use ($jenis_pengguna) {
-                $query->where('name', $jenis_pengguna);
+        if ($request->destination) {
+            $query->where('destination', $request->destination);
+        }
+
+        if ($request->jenis_pengguna) {
+            $query->whereHas('jasa', function ($q) use ($request) {
+                $q->where('id', $request->jenis_pengguna);
             });
         }
 
-        $results = $routes->get();
+        if ($request->jenis_kapal) {
+            $query->whereHas('transport', function ($q) use ($request) {
+                $q->where('id', $request->jenis_kapal);
+            });
+        }
 
-        // Kirim data ke halaman blade 'search-results'
-        return view('home', compact('results'));
+        $data['routes'] = $query->get();
+        $data['fasilitas'] = Facilities::all();
+
+        return view('home', $data);
     }
 }
