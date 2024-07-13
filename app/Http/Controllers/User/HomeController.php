@@ -13,6 +13,7 @@ class HomeController extends Controller
     {
         $data['routes'] = Routes::with('jasa','transport','fasilitas')->get();
         $data['fasilitas'] = Facilities::all();
-        return view('home', $data);
+        $data['content'] = ['slider', 'search', 'room'];
+        return view('home.welcome.template', $data);
     }
 }
